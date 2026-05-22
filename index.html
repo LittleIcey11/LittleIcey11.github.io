@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chromium Remote Sessions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        
+        .description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .launch-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .launch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .launch-btn:active {
+            transform: translateY(0);
+        }
+        
+        .info {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .info h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .info p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .repo-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .repo-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 Chromium Remote Sessions</h1>
+        <p class="description">
+            Access and control Chromium browser sessions remotely. Run browser automation and remote control tasks with ease.
+        </p>
+        
+        <button class="launch-btn" onclick="launchApp()">
+            Launch Application
+        </button>
+        
+        <div class="info">
+            <h3>About This Project</h3>
+            <p>
+                This is a remote session manager for Chromium. Built as a Replit project, it allows you to:
+            </p>
+            <ul style="margin-top: 10px; margin-left: 20px; text-align: left;">
+                <li>Control Chromium browser instances remotely</li>
+                <li>Run automated browser tasks</li>
+                <li>Manage multiple sessions simultaneously</li>
+            </ul>
+            <p style="margin-top: 15px;">
+                📌 <strong>View the source code:</strong> <a href="https://replit.com/@353591472/Chromium-Remote-Sessions" class="repo-link">Replit Project</a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        function launchApp() {
+            // Replace with your actual Chromium Remote Sessions URL
+            const appUrl = 'https://chromium-remote-sessions.replit.dev/';
+            
+            // Try to open, or show instructions if it fails
+            window.open(appUrl, '_blank');
+            
+            setTimeout(() => {
+                alert('If the application did not open, please ensure the Replit server is running at:\n' + appUrl);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
