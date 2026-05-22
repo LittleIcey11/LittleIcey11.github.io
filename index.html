@@ -26,7 +26,7 @@
             border-radius: 12px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 40px;
-            max-width: 600px;
+            max-width: 800px;
             text-align: center;
         }
         
@@ -41,6 +41,14 @@
             line-height: 1.6;
             margin-bottom: 30px;
             font-size: 1.1em;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
         }
         
         .launch-btn {
@@ -65,6 +73,36 @@
         .launch-btn:active {
             transform: translateY(0);
         }
+
+        .launch-btn.secondary {
+            background: #f5f5f5;
+            color: #333;
+            border: 2px solid #667eea;
+        }
+
+        .launch-btn.secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .status.online {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.offline {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
         
         .info {
             margin-top: 30px;
@@ -84,6 +122,16 @@
             font-size: 0.95em;
             line-height: 1.6;
         }
+
+        .info ul {
+            margin-top: 10px;
+            margin-left: 20px;
+            text-align: left;
+        }
+
+        .info li {
+            margin-bottom: 8px;
+        }
         
         .repo-link {
             color: #667eea;
@@ -94,6 +142,23 @@
         .repo-link:hover {
             text-decoration: underline;
         }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -103,38 +168,102 @@
             Access and control Chromium browser sessions remotely. Run browser automation and remote control tasks with ease.
         </p>
         
-        <button class="launch-btn" onclick="launchApp()">
-            Launch Application
-        </button>
+        <div id="status" class="status offline">
+            <span class="spinner"></span>Checking Chromium status...
+        </div>
         
+        <div class="button-group">
+            <button class="launch-btn" onclick="startSession()">
+                ▶️ Start New Session
+            </button>
+            <button class="launch-btn secondary" onclick="checkStatus()">
+                🔄 Refresh Status
+            </button>
+        </div>
+
         <div class="info">
-            <h3>About This Project</h3>
+            <h3>📋 About This Project</h3>
             <p>
-                This is a remote session manager for Chromium. Built as a Replit project, it allows you to:
+                This is a remote session manager for Chromium. It allows you to:
             </p>
-            <ul style="margin-top: 10px; margin-left: 20px; text-align: left;">
-                <li>Control Chromium browser instances remotely</li>
-                <li>Run automated browser tasks</li>
-                <li>Manage multiple sessions simultaneously</li>
+            <ul>
+                <li>✅ Control Chromium browser instances remotely</li>
+                <li>✅ Run automated browser tasks and navigation</li>
+                <li>✅ Execute JavaScript in browser context</li>
+                <li>✅ Capture screenshots</li>
+                <li>✅ Manage multiple sessions simultaneously</li>
             </ul>
             <p style="margin-top: 15px;">
-                📌 <strong>View the source code:</strong> <a href="https://replit.com/@353591472/Chromium-Remote-Sessions" class="repo-link">Replit Project</a>
+                📌 <strong>View the source code:</strong> <a href="https://github.com/LittleIcey11/LittleIcey11.github.io" class="repo-link">GitHub Repository</a>
             </p>
+        </div>
+
+        <div class="info" style="margin-top: 20px; background: #e7f3ff; border-left: 4px solid #2196F3;">
+            <h3>🚀 API Endpoints</h3>
+            <p><strong>Local Development:</strong> http://localhost:3000</p>
+            <ul>
+                <li>POST /api/sessions/start - Start a new Chromium session</li>
+                <li>POST /api/sessions/:id/navigate - Navigate to URL</li>
+                <li>POST /api/sessions/:id/execute - Execute JavaScript</li>
+                <li>GET /api/sessions/:id/screenshot - Take screenshot</li>
+                <li>POST /api/sessions/:id/close - Close session</li>
+                <li>GET /api/status - Get server status</li>
+            </ul>
         </div>
     </div>
     
     <script>
-        function launchApp() {
-            // Replace with your actual Chromium Remote Sessions URL
-            const appUrl = 'https://chromium-remote-sessions.replit.dev/';
-            
-            // Try to open, or show instructions if it fails
-            window.open(appUrl, '_blank');
-            
-            setTimeout(() => {
-                alert('If the application did not open, please ensure the Replit server is running at:\n' + appUrl);
-            }, 1000);
+        const API_BASE = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000'
+            : window.location.origin;
+
+        async function checkStatus() {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = '🔄 Checking Chromium status...';
+            statusEl.className = 'status offline';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/status`);
+                const data = await response.json();
+
+                if (data.status === 'online') {
+                    statusEl.innerHTML = `✅ Chromium Online - Version: ${data.chromiumVersion} | Active Sessions: ${data.activeSessions}`;
+                    statusEl.className = 'status online';
+                } else {
+                    statusEl.textContent = '⚠️ Chromium Offline - Server is not running';
+                    statusEl.className = 'status offline';
+                }
+            } catch (error) {
+                statusEl.textContent = '❌ Failed to connect to server';
+                statusEl.className = 'status offline';
+                console.error('Status check error:', error);
+            }
         }
+
+        async function startSession() {
+            try {
+                const response = await fetch(`${API_BASE}/api/sessions/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(`✅ Session Started!\n\nSession ID: ${data.sessionId}\n\nUse this ID to control the Chromium browser.`);
+                    checkStatus();
+                } else {
+                    alert(`❌ Error: ${data.error}`);
+                }
+            } catch (error) {
+                alert(`❌ Failed to start session: ${error.message}`);
+                console.error('Start session error:', error);
+            }
+        }
+
+        // Check status on page load
+        window.addEventListener('load', checkStatus);
+        // Refresh status every 30 seconds
+        setInterval(checkStatus, 30000);
     </script>
 </body>
 </html>
