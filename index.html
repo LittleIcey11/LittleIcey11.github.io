@@ -200,7 +200,7 @@
 
         <div class="info" style="margin-top: 20px; background: #e7f3ff; border-left: 4px solid #2196F3;">
             <h3>🚀 API Endpoints</h3>
-            <p><strong>Local Development:</strong> http://localhost:3000</p>
+            <p><strong>Server URL:</strong> <span id="serverUrl">Loading...</span></p>
             <ul>
                 <li>POST /api/sessions/start - Start a new Chromium session</li>
                 <li>POST /api/sessions/:id/navigate - Navigate to URL</li>
@@ -213,13 +213,14 @@
     </div>
     
     <script>
-        const API_BASE = window.location.hostname === 'localhost' 
-            ? 'http://localhost:3000'
-            : window.location.origin;
+        // CHANGE THIS to your deployed server URL
+        const API_BASE = 'https://your-railway-app.railway.app'; // Update this with your Railway URL
+        
+        document.getElementById('serverUrl').textContent = API_BASE;
 
         async function checkStatus() {
             const statusEl = document.getElementById('status');
-            statusEl.textContent = '🔄 Checking Chromium status...';
+            statusEl.innerHTML = '<span class="spinner"></span>🔄 Checking Chromium status...';
             statusEl.className = 'status offline';
 
             try {
@@ -234,7 +235,7 @@
                     statusEl.className = 'status offline';
                 }
             } catch (error) {
-                statusEl.textContent = '❌ Failed to connect to server';
+                statusEl.textContent = '❌ Failed to connect to server - Check if server is deployed';
                 statusEl.className = 'status offline';
                 console.error('Status check error:', error);
             }
@@ -255,7 +256,7 @@
                     alert(`❌ Error: ${data.error}`);
                 }
             } catch (error) {
-                alert(`❌ Failed to start session: ${error.message}`);
+                alert(`❌ Failed to start session: ${error.message}\n\nMake sure your server is deployed!`);
                 console.error('Start session error:', error);
             }
         }
